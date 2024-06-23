@@ -1,0 +1,22 @@
+FROM golang:alpine
+
+LABEL maintainer="Atharva Pandey <atharva@gopherine.xyz>"
+
+RUN apk add --no-cache git
+
+WORKDIR /app
+
+COPY go.mod go.sum ./
+
+RUN go mod download
+
+COPY . .
+COPY .air.toml ./
+
+RUN go install github.com/air-verse/air@latest
+
+RUN go build -o main ./cmd/api/main.go
+
+EXPOSE 1323
+
+CMD air
